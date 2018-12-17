@@ -1,0 +1,8 @@
+softdep amdgpu pre: vfio vfio_pci
+vfio
+vfio_iommu_type1
+vfio_virqfd
+options vfio_pci ids={{pci_ids}}
+vfio_pci ids={{pci_ids}}
+vfio_pci
+amdgpu
