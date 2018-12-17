@@ -107,7 +107,7 @@ def main():
     from os import system, geteuid
     from sys import argv
     c = Configuration.parse_arguments(argv)
-    if c.gpu == "nvidia":
+    if c.gpu == "nvidia" or c.amd:
         print("i did not test this")  # "remove the following exit if you know what you are doing"
         exit()
 
