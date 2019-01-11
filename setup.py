@@ -11,8 +11,8 @@ class Configuration(object):
         print("usage: python3 setup.py {arguments}")
         print("{arguments}:")
         print("\t-i\t--intel")
-        print("\t-a\t--amd")
-        print("\t-g\t--gpu\tnvidia|ati")
+        print("\t-a\t--ati")
+        print("\t-g\t--gpu\tnvidia|amd")
         print("\t-p\t--pci-id")
         exit()
 
@@ -110,10 +110,10 @@ def main():
     if c.gpu == "nvidia" or c.amd:
         print("i did not test this")  # "remove the following exit if you know what you are doing"
         exit()
-
     if geteuid() != 0:
         print("please run with sudo or as root")
         exit()
+    banner()
     yn = input("[CONTINUE] >")
     if yn != "CONTINUE":
         print("user didn't enter 'CONTINUE'")
