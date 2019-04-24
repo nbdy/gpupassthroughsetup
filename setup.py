@@ -1,19 +1,28 @@
 
 
 class Configuration(object):
-    intel = False
-    amd = False
-    gpu = "ati"
+    CPU_INTEL = 0
+    CPU_AMD = 1
+
+    GPU_NVIDIA = 0
+    GPU_ATI = 1
+
+    GPU = {
+        GPU_NVIDIA: "nvidia",
+        GPU_ATI: "amd"
+    }
+
+    cpu = None
+    gpu = None
     pci_ids = ""
 
     @staticmethod
     def help():
         print("usage: python3 setup.py {arguments}")
         print("{arguments}:")
-        print("\t-i\t--intel")
-        print("\t-a\t--ati")
-        print("\t-g\t--gpu\tnvidia|amd")
-        print("\t-p\t--pci-id")
+        print("\t-c\t--cpu\t\tamd|intel")
+        print("\t-g\t--gpu\t\tnvidia|amd")
+        print("\t-p\t--pci-id\tshould get detected automatically")
         exit()
 
     @staticmethod
@@ -22,12 +31,16 @@ class Configuration(object):
         i = 0
         while i < len(arguments):
             a = arguments[i]
-            if a in ["-i", "--intel"]:
-                c.intel = True
-            elif a in ["-a", "--amd"]:
-                c.amd = True
+            if a in ["-c", "--cpu"]:
+                if arguments[i + 1] in ["intel"]:
+                    c.cpu = Configuration.CPU_INTEL
+                elif arguments[i + 1] in ["amd"]:
+                    c.cpu = Configuration.CPU_AMD
             elif a in ["-g", "--gpu"]:
-                c.gpu = arguments[i + 1]
+                if arguments[i + 1] in ["amd", "ati"]:
+                    c.gpu = Configuration.GPU_ATI
+                elif arguments[i + 1] in ["nvidia"]:
+                    c.gpu = Configuration.GPU_NVIDIA
             elif a in ["-p", "--pci-id"]:
                 c.pci_ids += arguments[i + 1]
                 c.pci_ids += ","
@@ -45,22 +58,25 @@ def generate_grub_default(pci_ids, splash=False, intel=True, infile="grub_defaul
     else:
         c = c.replace("{{splash}}", "nosplash")
     if intel:
-        c = c.replace("{{iommu}}", "intel_iommu=on iommu=pt")
+        c = c.replace("{{iommu}}", "intel_iommu=on")
     else:
-        c = c.replace("{{iommu}}", "")  # todo
+        c = c.replace("{{iommu}}", "amd_iommu=on iommu=pt")
     c = c.replace("{{pci_ids}}", pci_ids)
     with open("/etc/default/grub", "w") as o:
         o.write(c)
 
 
-def get_pci_ids(gpu="amd"):
+def get_pci_ids(gpu=Configuration.GPU_ATI):
+    gpu = Configuration.GPU[gpu]
     from subprocess import Popen, PIPE
     p = Popen(["lspci", "-knn"], stdout=PIPE)
     ids = ""
+    vga_found = False
     for line in p.stdout.readlines():
         line = str(line[0:-1].lower())
         if not line.startswith('\t'):
-            if gpu in line:
+            if (gpu in line and "vga" in line) or ((gpu in line and "audio" in line) and vga_found):
+                vga_found = True
                 vals = line.split(" ")
                 for v in vals:
                     if v.endswith("'"):
@@ -107,14 +123,16 @@ def main():
     from os import system, geteuid
     from sys import argv
     c = Configuration.parse_arguments(argv)
-    if c.gpu == "nvidia" or c.amd:
-        print("i did not test this")  # "remove the following exit if you know what you are doing"
+    if c.gpu is None:
+        print("what am is supposed to pass through?")
         exit()
+    if c.gpu == Configuration.GPU_NVIDIA:
+        print("i did not test this, there should be no support for it")
     if geteuid() != 0:
         print("please run with sudo or as root")
         exit()
     banner()
-    yn = input("[CONTINUE] >")
+    yn = raw_input("[CONTINUE] > ")
     if yn != "CONTINUE":
         print("user didn't enter 'CONTINUE'")
         exit()
