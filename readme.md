@@ -21,4 +21,7 @@ but after running 'sudo python3 setup.py -i intel -g ati':
 
 ### fs*
 [*fs][frequent statements]<br>
-after rebooting there is no sound
+
+s: after rebooting there is no sound<br>
+a: check modified files and confirm only gpu is in pci ids<br>
+<br>
