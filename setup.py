@@ -1,3 +1,4 @@
+#!/bin/python3
 
 
 class Configuration(object):
