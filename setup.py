@@ -22,8 +22,8 @@ class Configuration(object):
         print("usage: python3 setup.py {arguments}")
         print("{arguments}:")
         print("\t-c\t--cpu\t\tamd|intel")
-        print("\t-g\t--gpu\t\tnvidia|amd")
-        print("\t-p\t--pci-id\tshould get detected automatically")
+        print("\t-g\t--gpu\t\tnvidia|amd\tthe gpu to pass through")
+        print("\t-p\t--pci-id\t\t\tshould get detected automatically")
         exit()
 
     @staticmethod
@@ -133,7 +133,7 @@ def main():
         print("please run with sudo or as root")
         exit()
     banner()
-    yn = raw_input("[CONTINUE] > ")
+    yn = input("[CONTINUE] > ")
     if yn != "CONTINUE":
         print("user didn't enter 'CONTINUE'")
         exit()
