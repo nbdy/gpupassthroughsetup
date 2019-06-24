@@ -18,3 +18,7 @@ but after running 'sudo python3 setup.py -i intel -g ati':
 - '/etc/default/grub' (for me) contains a lot of pci ids, which would not be correct
 - usually there should be two pci ids
 - check lscpi -knn | grep "{pciid}" to know which ones to remove
+
+### fs*
+[*fs][frequent statements]<br>
+after rebooting there is no sound
