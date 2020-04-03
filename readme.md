@@ -23,5 +23,5 @@ but after running 'sudo python3 setup.py -i intel -g ati':
 [*fs][frequent statements]<br>
 
 s: after rebooting there is no sound<br>
-a: check modified files and confirm only gpu is in pci ids<br>
+a: check modified files and confirm only gpu is in pci ids, your soundcard could also be manufactured be amd or ati<br>
 <br>
