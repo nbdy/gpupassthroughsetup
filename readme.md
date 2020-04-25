@@ -1,6 +1,7 @@
 tested on: 
 - ubuntu 16.04 (elementary 0.4)
 - ubuntu 18.04 (elementary 5.0) 
+- debian 10 (Parrot 4.8)
 <br>
 
 currently just supports this hardware constellation:<br>
